@@ -31,8 +31,8 @@ check_wifi() {
     # Check if WiFi is enabled
     WIFI_POWER=$(networksetup -getairportpower "$WIFI_INTERFACE" | awk '{print $4}')
 
-    # Check if WiFi is connected to a network
-    WIFI_NETWORK=$(airport -I | grep " SSID" | awk '{print $2}')
+    # Check if WiFi is connected to a network using networksetup instead of airport
+    WIFI_NETWORK=$(networksetup -getairportnetwork "$WIFI_INTERFACE" 2>/dev/null | grep -v "You are not associated with an AirPort network" | sed 's/Current Wi-Fi Network: //')
 
     # Check actual connection status with ping
     ping -c 1 -W 1 8.8.8.8 > /dev/null 2>&1
@@ -55,14 +55,19 @@ check_wifi() {
         play_sound
     fi
 
+    # If state changed from non-connected to non-connected but of a different type, log it
+    if [ "$PREVIOUS_STATE" != "connected" ] && [ "$CURRENT_STATE" != "connected" ] && [ "$PREVIOUS_STATE" != "$CURRENT_STATE" ]; then
+        echo "WiFi state changed from $PREVIOUS_STATE to $CURRENT_STATE at $(date)" >> "$LOG_FILE"
+    fi
+
+    # If state changed from non-connected to connected, log it
+    if [ "$PREVIOUS_STATE" != "connected" ] && [ "$CURRENT_STATE" == "connected" ]; then
+        echo "WiFi reconnected at $(date)" >> "$LOG_FILE"
+    fi
+
     # Update the previous state
     PREVIOUS_STATE="$CURRENT_STATE"
 }
-
-# Create the airport command symlink if it doesn't exist
-if [ ! -f /usr/local/bin/airport ]; then
-    sudo ln -s /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport /usr/local/bin/airport
-fi
 
 echo "WiFi monitoring started at $(date)" >> "$LOG_FILE"
 

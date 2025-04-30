@@ -1,0 +1,11 @@
+The `com.user.wifimonitor.plist` file needs to be copied to:
+~/Library/LaunchAgents
+
+To add the file to startup, run the following:
+launchctl load ~/Library/LaunchAgents/com.user.wifimonitor.plist
+
+To remove the file from startup, run the following:
+launchctl unload ~/Library/LaunchAgents/com.user.wifimonitor.plist
+
+To test whether the monitoring script is working:
+bash ~/Scripts/wifi-monitor/wifi-monitor.sh

@@ -12,10 +12,10 @@ play_sound() {
     afplay "$SOUND_FILE"
 
     # Also try AppleScript as a backup method
-    osascript -e "play sound \"$SOUND_FILE\""
+    osascript -e "do shell script \"afplay \\\"$SOUND_FILE\\\"\""
 
     # Add a notification with sound as another fallback
-    osascript -e 'display notification "WiFi Disconnected" with title "Network Status" sound name "Basso"'
+    osascript -e 'display notification "WiFi Disconnected" with title "Network Status"'
 
     echo "$(date): WiFi disconnection detected - Sound played" >> "$LOG_FILE"
 }

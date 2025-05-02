@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the sound to play
-SOUND_FILE="$HOME/Scripts/wifi-monitor/hip-to-be-square.aiff"
+SOUND_FILE="$HOME/Scripts/wifi-monitor/Blow.aiff"
 
 # Log file location
 LOG_FILE="$HOME/Scripts/wifi-monitor/wifi-monitor.log"
